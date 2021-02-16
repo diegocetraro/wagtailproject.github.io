@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags cache %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="cc-inner-title">
+                {{page.title}}
+            </h1>
+            <p class="cc-inner-subtitle">{{page.subtitle}}</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        {% cache 2952000 service_listing_page page.id %}
+        {% for card in card_content %}
+        <div class="col-md-6 d-flex align-items-stretch">
+            <div class="mb-3 text-center">
+                    <a href="{{card.link}}">
+                        <picture>
+                            {% image card.service_image fill-570x370 as card_img %}
+                            <img class="lazy card-img-top" src="{{card_img.url}}"" alt="">
+                        </picture>
+                    </a>
+                <div class="card-body py-3 px-3 border border-secondary">
+                        <a href="{{card.link}}">
+                            <h5 class="card-title">{{card.title}}</h5>
+                            <p class="card-description">{{card.description}}</p>
+                        </a>
+                    <p class="card-text">
+                            <a href="{{card.link}}" class="btn btn-link d-inline">{{card.button_text}}</a>   
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endcache %}
+    </div>
+{% endblock %}

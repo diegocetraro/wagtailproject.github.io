@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags cache %}
+
+{% block content %}
+
+    {% cache 2592000 service_page page.id %}
+    <div class="row mb-3">
+        <div class="col-lg-6">
+            <h1 class="cc-inner-title">{{page.title}}</h1>
+            <p class="cc-inner-subtitle cc-service-subtitle">{{page.description}}</p>          
+            {% if page.internal_page.url or page.external_page %}
+                <a href="{{page.service_listing_page.url}}" class="btn btn-primary btn-lg mb-2 mb-lg-0">{{page.button_text}}</a>
+            {% endif %}    
+        </div>
+        <div class="col-lg-6">
+            <picture>
+                {% image page.service_image fill-570x370 as img %}
+                <img src="{{img.url}}" alt="{{img.alt}}" style="width: 100%; height: auto;">
+            </picture>
+        </div>
+    </div>
+    {% endcache %}
+    
+{% endblock %}

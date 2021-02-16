@@ -1,0 +1,23 @@
+<!--Start of Card Block-->
+{% load wagtailimages_tags %}
+
+{% for card in value.cards %}
+{% image card.image fill-570x370 as img_card %}
+<div class="container border-bottom pb-3 mb-3">
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <img src="{{img_card.url}}" alt="{{img_card.alt}}"class="w-100 h-auto">
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 mt-2 mx-0">
+            <h3 class="text-center">{{card.title}}</h3>
+            <p>{{card.text}}</p>
+            {% if card.link.link %}
+                <a href="{{card.link.link}}" {% if card.link.external_page %} target="__blank"{% endif %} class="d-block">
+                <h6 class="text-center btn btn-link d-block">{{card.link.link_title}}</h6></a>
+            {% endif %}
+        </div>
+    </div>      
+</div>
+
+{% endfor %}
+<!--End of Card Block-->

@@ -1,0 +1,84 @@
+{% load static %}
+{% load static menus_tags cache %}
+{% load wagtailimages_tags wagtailcore_tags %}
+{% get_menu "menu" as footer %}
+{% get_menu "contact" as  contact_us %}
+
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+<section class="py-4 mt-lg-5 mt-0" style='background-color: #814EBF; background-image: url("{% static 'images/contact-overlay.png' %}");'>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8 text-lg-left text-center">
+          <h2 class="h2 cc-contact-footer-h2">
+            {% cache 2592000 footer_cta_settings_title %}
+            <h1 class="text-white font-weight-bold">{{settings.settings.FooterCTASetting.title}}</h1>
+            {% endcache %}
+          </h2>
+          {% cache 2592000 footer_cta_settings_text %}
+          <h1 class="cc-contact-footer-p mb-0">{{settings.settings.FooterCTASetting.text | richtext }}</h1>
+          {% endcache %}
+        </div>
+        <div class="col-lg-4 text-lg-right text-center">
+          {% cache 2592000 footer_cta_settings_page %}
+          <a href="{{settings.settings.FooterCTASetting.contact.url}}" class="btn btn-light btn-lg mt-lg-0 mt-3">
+            {{settings.settings.FooterCTASetting.page_name}}
+          </a>
+          {% endcache %}
+        </div>
+      </div>
+    </div>
+</section>
+
+<footer class="bg-dark py-4 text-light text-md-left text-center cc-footer">
+    <div class="container">
+      <div class="row mx-lg-n3">
+        <div class="px-lg-3 col-lg-3 col-md-6 col-sm-12">
+          <div class="cc-footer-title">Links</div>
+            {% cache 2592000 site_footer %} 
+              {% for item in footer.menu_items.all %}
+                {% if item.link_title %}
+                <a class="cc-footer-link-lg d-block footer-a" href="{{item.link}}" {% if item.open_in_new_tab %} target="_blank" {% endif %}>
+                  {{item.validate_title}}
+                </a>
+                {% endif %}
+              {% endfor %}
+            {% endcache %}
+        </div>
+          <div class="px-lg-2 col-lg-3 col-md-6 col-sm-12">
+            <div class="cc-footer-title">Contact Us</div>
+            {% cache 2592000 site_contact %}  
+              {% for item in contact_us.menu_items.all %}
+                  {% if item.link_title %}
+                    <a class="cc-footer-link-lg d-block footer-a" href="{{item.link}}" {% if item.open_in_new_tab %} target="_blank" {% endif %}>
+                        {{item.validate_title}}
+                    </a>
+                  {% endif %}
+                {% endfor %}
+            {% endcache %}
+              {% cache 2592000 footer_contact_Settings %}
+              <h1 class="d-block footer-h5">{{settings.settings.ContactSettings.text | richtext}}</h1>
+              {% endcache %}
+          </div>
+          <div class="px-lg-4 col-lg-3 col-md-6 col-sm-12">
+            <div class="cc-footer-title">Attention available on:</div>
+              {% cache 2592000 footer_contact_Settings %}
+              <h1 class="d-block footer-h5">{{settings.settings.HourSettings.hour | richtext}}</h1>
+              {% endcache %}
+          </div>
+          <!--******SOCIAL MEDIA SETTINGS HTML SECTION******-->
+          <div class="px-lg-3 col-lg-3 col-md-6 col-sm-12">
+            <div class="cc-footer-title">Social Media</div>
+              {% cache 2592000 site_social %}  
+                {% for block in settings.settings.Social.body %}
+                  {% include_block block %}
+                {% endfor %}
+              {% endcache %}  
+            <div class="cc-footer-copy">&copy; {% now "Y" %} Rocketman</div>
+          <!--******SOCIAL MEDIA SETTINGS HTML SECTION******-->
+        </div>
+      </div>
+    </div>
+</footer>

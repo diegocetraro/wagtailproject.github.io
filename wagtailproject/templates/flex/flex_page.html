@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load wagtailcore_tags cache %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="cc-inner-title">{{page.title}}</h1>
+        </div>
+    </div>
+<!--Shows all the declared in wagtail stream fields-->
+{% if not request.is_preview %}
+    {% cache 2592000 flex_page page.id %}
+        {% for block in page.body %}
+            {% include_block block %}
+        {% endfor %}
+    {% endcache %}
+{% else %}
+    {% for block in page.body %}
+        {% include_block block %}
+    {% endfor %}
+{% endif %}
+<!--Shows all the declared in wagtail stream fields-->
+{% endblock content %}

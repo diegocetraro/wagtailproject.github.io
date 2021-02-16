@@ -1,0 +1,10 @@
+
+{% load wagtailimages_tags %}
+{% block content %}
+    {% if self.social_name %}
+    <a href="{{self.social_url}}" class="cc-footer-social-icon">
+      {% image self.social_img fill-32x32 as img %}
+      <img src="{{img.url}}" alt="{{img.alt}}" style="border-radius: 7px;">
+    </a>
+    {% endif %}
+{% endblock %}

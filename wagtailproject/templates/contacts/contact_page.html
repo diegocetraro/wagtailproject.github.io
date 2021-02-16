@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+{% load wagtailimages_tags wagtailcore_tags widget_tweaks cache %}
+
+{% block content %}
+{% cache 2592000 contact_us %}
+    <div class="row">
+        <div class="col">
+            <h1 class="cc-inner-title">{{page.title}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="cc-contact-text">
+                {{page.intro | richtext}}
+            </div>
+            <div class="d-none d-md-block">
+                <a href="{{page.map_url}}" target="__blank">
+                    {% image page.map_image fill-570x370 as img %}
+                    <img src="{{img.url}}" alt="{{img.alt}}" class="w-100 h-auto">
+                </a>
+            </div>
+        </div>
+        <div class="col-md-6 mt-md-2 mt-0">
+            <form action="{% pageurl page %}" method="POST" role="form">
+                {% csrf_token %}
+                <small class="d-block text-danger">(*) Required Fields</small>
+                {% for input in form %}
+                <div class="row">
+                    <div class="col-sm-12">
+                    
+                    <!--If the field is a textarea-->       
+                    {% if input|widget_type == 'textarea' %}
+                        <div class="form-group">
+                        <label for="{{ input.id_for_label }}">
+                            {{ input.label }}
+                            {% if input.field.required %}
+                                <small class="d-inline text-danger">*</small>
+                            {% endif %}
+                        </label>
+                        {% render_field input class+="form-control" rows="5" placeholder=input.label %}
+                        {% if input.errors %}
+                            <small class="d-block text-danger text-small cc-font-light">
+                            {% for err in input.errors %}
+                                * {{ err|escape }}{% if not forloop.last %}<br />{% endif %}
+                            {% endfor %}
+                            </small>
+                        {% endif %}
+                        {% if input.help_text %}
+                            <small class="form-text text-muted cc-font-light">{{ input.help_text|safe }}</small>
+                        {% endif %}
+                        </div>
+                    <!--If the field is a textarea-->       
+
+                    <!--If the field is some other field beside textarea-->   
+                    {% else %}
+                        {% if input.label != '' %}
+                        <div class="form-group">
+                            <label for="{{ input.id_for_label }}">
+                            {{ input.label }}
+                            {% if input.field.required %}
+                                <small class="d-inline text-danger">*</small>
+                            {% endif %}
+                            </label>
+                            {% render_field input class+="form-control" placeholder=field.label %} <!---->
+                            {% if input.errors %}
+                            <small class="d-block text-danger text-small cc-font-light">
+                                {% for err in input.errors %}
+                                * {{ err|escape }}{% if not forloop.last %}<br />{% endif %}
+                                {% endfor %}
+                            </small>
+                            {% endif %}
+                            {% if input.help_text %}
+                            <small class="form-text text-muted cc-font-light">{{ input.help_text|safe }}</small>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    <!--If the field is some other field beside textarea-->
+                    
+                    
+                    {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                <button class="btn btn-primary btn-lg"
+                        style="padding-left: 3.5rem; padding-right: 3.5rem;">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endcache %}
+{% endblock content %}
